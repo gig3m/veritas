@@ -1,0 +1,17 @@
+{
+  "name": "veritas",
+  "version": "0.0.1",
+  "description": "A simple command-line tool for outputting Bible text",
+  "author": "Kyle Arrington",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "commander": "^2.3.0",
+    "sword": "^0.3.6"
+  },
+  "bin": {
+    "veritas": "veritas.js"
+  }
+}
