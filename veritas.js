@@ -3,6 +3,9 @@
 var program = require('commander');
 var chalk = require('chalk');
 var sword = require('sword');
+var sqlite = require('sqlite3').verbose();
+
+var db = new sqlite.Database('data/bible.db');
 
 var dev = true;
 

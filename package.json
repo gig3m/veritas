@@ -9,7 +9,8 @@
   "dependencies": {
     "chalk": "^0.5.1",
     "commander": "^2.3.0",
-    "sword": "^0.3.6"
+    "sword": "^0.4.0",
+    "sqlite3": "^2.2.4"
   },
   "bin": {
     "veritas": "veritas.js"
