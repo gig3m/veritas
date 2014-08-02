@@ -7,20 +7,22 @@ var _ = require('lodash');
 
 var config = {};
 config.lang = 'en';
-config.dev = true;
+config.dev = false;
 
-var source = require('./data/' + config.lang + '/esvflat.json');
 
 program
     .version('0.0.1')
     .usage('[options] <keywords>')
     .option('-t, --translation [abbr]', 'Specify which Bible source to use')
     .option('-m, --manuscript', 'Manuscript style output (nothing but the text)')
+    .option('-d, --debug', 'Output addition information on parsed keywords')
     .parse(process.argv);
 
 if(!program.args.length) {
     program.help();
 } else {
+
+	var source = program.translation ? require('./data/'+program.translation+'.json') : require('./data/esv.json');
 
 	var query = '';
 	program.args.forEach(function(a) {
@@ -90,7 +92,7 @@ if(!program.args.length) {
 		}
 	});
 
-	if (config.dev) {
+	if (program.debug || config.dev) {
 		console.log(chalk.red.bold('Translation: ') + program.translation); 
 	    console.log(chalk.red.bold('String: ') + query);   	
 	    console.log(chalk.red.bold('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));   		
@@ -100,7 +102,8 @@ if(!program.args.length) {
 	//Heading needs meta data to display, Book names mostly
 	//onsole.log(chalk.bgCyan.red.bold(query));
 	_(result).forEach(function(r){
-		process.stdout.write(chalk.red(' [') + chalk.yellow.bold(r.chapter + ':' + r.verse) + chalk.red('] ') + r.text);
+		!program.manuscript && process.stdout.write(chalk.red('[') + chalk.yellow.bold(r.chapter + ':' + r.verse) + chalk.red('] '));
+		process.stdout.write(r.text + ' ');
 	})
 
 
