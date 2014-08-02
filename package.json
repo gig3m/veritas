@@ -10,7 +10,8 @@
     "chalk": "^0.5.1",
     "commander": "^2.3.0",
     "sword": "^0.4.0",
-    "sqlite3": "^2.2.4"
+    "rethinkdb": "^1.13.0-3",
+    "lodash": "^2.4.1"
   },
   "bin": {
     "veritas": "veritas.js"
