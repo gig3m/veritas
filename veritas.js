@@ -26,10 +26,9 @@ if(!program.args.length) {
 	program.args.forEach(function(a) {
 		query = query.concat(a + ' ');
 	});
-	var interpreted = sword(query);
 	var result = [];
 
-	_(interpreted).forEach(function(set) {
+	_(sword(query)).forEach(function(set) {
 		//shorthand for start and end
 		var s = set.start;
 		var e = set.end;
@@ -39,15 +38,34 @@ if(!program.args.length) {
 			if (_.has(set.end, 'chapter')) {
 				//The range given spans chapter boundaries
 				_.range(s.chapter, (e.chapter + 1)).forEach(function(c){
-					if (c = s.chapter) {
-						//iterate from s.verse
-						//issue being we have no meta info, no way to know when chapter ends
-						//can pull via where and iterate and check but requires pulling whole chapter
-						//ah, the things we do to avoid sql
-					} else if (c = e.chapter) {
-						//iterate till e.verse
+					var haystack = _.filter(source, { 'book': s.book, 'chapter': c });
+					if (c === s.chapter) {
+						if (!s.verse) {
+							_(haystack).forEach(function(h) {
+								result.push(h);
+							});		
+						} else {
+							_(haystack).forEach(function(h) {
+								h.verse >= s.verse && result.push(h);
+							});
+						}
+						
+					} else if (c === e.chapter) {
+						if (!e.verse) {
+							_(haystack).forEach(function(h) {
+								result.push(h);
+							});		
+						} else {
+							_(haystack).forEach(function(h) {
+								h.verse <= e.verse && result.push(h);
+							});
+						}
+
 					} else {
-						//iterate through entire chapter
+						_(haystack).forEach(function(h) {
+							result.push(h);
+						});					
+
 					}
 				});
 				
@@ -60,16 +78,30 @@ if(!program.args.length) {
 			}
 		} else {
 			//No range was given, single verse
-			result = _.find(source, s);
+			if (!s.verse) {
+				var haystack = _.filter(source, { 'book': s.book, 'chapter': s.chapter });
+				_(haystack).forEach(function(h) {
+					result.push(h);
+				});		
+			} else {
+				result = _.find(source, s);
+			}
+
 		}
 	});
 
 	if (config.dev) {
 		console.log(chalk.red.bold('Translation: ') + program.translation); 
 	    console.log(chalk.red.bold('String: ') + query);   	
-	    console.log(chalk.red.bold('Verse(s) Interpreted: ') + JSON.stringify(interpreted));   		
-	    console.log(chalk.red.bold('Returned Value: ') + JSON.stringify(result));  
+	    console.log(chalk.red.bold('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));   		
+	    //console.log(chalk.red.bold('Returned Value: ') + JSON.stringify(result));  
 	}
+
+	//Heading needs meta data to display, Book names mostly
+	//onsole.log(chalk.bgCyan.red.bold(query));
+	_(result).forEach(function(r){
+		process.stdout.write(chalk.red(' [') + chalk.yellow.bold(r.chapter + ':' + r.verse) + chalk.red('] ') + r.text);
+	})
 
 
     process.exit(0);
