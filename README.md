@@ -10,9 +10,7 @@ The greatest of all motivations drove me to this package:  I wanted it myself.  
 
 Along the way I came across some interesting tools and fancied the default output up a bit.  Without any command line arguments Veritas will produce something like this:
 
-```
-[1:23] For if anyone is a hearer of the word and not a doer, he is like a man who looks intently at his natural face in a mirror. [1:24] For he looks at himself and goes away and at once forgets what he was like. [1:25] But the one who looks into the perfect law, the law of liberty, and perseveres, being no hearer who forgets but a doer who acts, he will be blessed in his doing.
-```
+![output example](https://copy.com/IZHIxU1Cgg8IKvoq)
 
 It does not (currently) print any title or heading seeing as you just typed it in your command line.
 
@@ -34,7 +32,7 @@ Veritas comes with the KJV because it is in the public domain.  The KJV is not m
 
 The translation option takes a string that will be applied as a filename.  This file should be located in the data directory and contain an array of objects as is demonstrated below.
 
-```js
+```json
 [{"book":59,"chapter":1,"verse":23,"text":"For if anyone is a hearer of the word and not a doer, he is like a man who looks intently at his natural face in a mirror."},{"book":59,"chapter":1,"verse":24,"text":"For he looks at himself and goes away and at once forgets what he was like."},{"book":59,"chapter":1,"verse":25,"text":"But the one who looks into the perfect law, the law of liberty, and perseveres, being no hearer who forgets but a doer who acts, he will be blessed in his doing."}]
 ```
 

@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var config = {};
 config.lang = 'en';
-config.dev = true;
+config.dev = false;
 
 
 program
@@ -86,23 +86,23 @@ if(!program.args.length) {
           result.push(h);
         });     
       } else {
-        result = _.find(source, s);
+        result.push(_.find(source, s));
       }
 
     }
   });
 
   if (program.debug || config.dev) {
-    console.log(chalk.red.bold('Translation: ') + program.translation); 
-    console.log(chalk.red.bold('String: ') + query);    
-    console.log(chalk.red.bold('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));           
+    console.log(chalk.red('Translation: ') + program.translation); 
+    console.log(chalk.red('String: ') + query);    
+    console.log(chalk.red('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));           
     //console.log(chalk.red.bold('Returned Value: ') + JSON.stringify(result));  
   }
 
   //Heading needs meta data to display, Book names mostly
   //onsole.log(chalk.bgCyan.red.bold(query));
   _(result).forEach(function(r){
-    !program.manuscript && process.stdout.write(chalk.red('[') + chalk.yellow.bold(r.chapter + ':' + r.verse) + chalk.red('] '));
+    !program.manuscript && process.stdout.write(chalk.red('[') + chalk.yellow(r.chapter + ':' + r.verse) + chalk.red('] '));
     process.stdout.write(r.text + ' ');
   })
 

@@ -9,7 +9,7 @@
   "dependencies": {
     "chalk": "^0.5.1",
     "commander": "^2.3.0",
-    "sword": "0.4.1",
+    "sword": "gig3m/sword",
     "rethinkdb": "^1.13.0-3",
     "lodash": "^2.4.1"
   },
