@@ -22,15 +22,32 @@ if(!program.args.length) {
   program.help();
 } else {
 
-  var source = program.translation ? require('./data/'+program.translation+'.json') : require('./data/kjv.json');
+  var source = getSource(program.translation);
+  var query = buildQuery(program.args);
 
+  var result = processQuery(sword(query));
+
+  if (program.debug || config.dev) { outputDebug(); }
+
+  outputResult(result);
+  process.exit(0);
+}
+
+function getSource(translation) {
+  return translation ? require('./data/'+program.translation+'.json') : require('./data/kjv.json');
+}
+
+function buildQuery(args) {
   var query = '';
   program.args.forEach(function(a) {
     query = query.concat(a + ' ');
   });
-  var result = [];
+  return query;
+}
 
-  _(sword(query)).forEach(function(set) {
+function processQuery(string) {
+    var result = [];
+    _(string).forEach(function(set) {
     //shorthand for start and end
     var s = set.start;
     var e = set.end;
@@ -91,21 +108,21 @@ if(!program.args.length) {
 
     }
   });
+  return result;
+}
 
-  if (program.debug || config.dev) {
-    console.log(chalk.red('Translation: ') + program.translation); 
-    console.log(chalk.red('String: ') + query);    
-    console.log(chalk.red('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));           
-    //console.log(chalk.red.bold('Returned Value: ') + JSON.stringify(result));  
-  }
-
+function outputResult(result) {
   //Heading needs meta data to display, Book names mostly
   //onsole.log(chalk.bgCyan.red.bold(query));
   _(result).forEach(function(r){
     !program.manuscript && process.stdout.write(chalk.red('[') + chalk.yellow(r.chapter + ':' + r.verse) + chalk.red('] '));
     process.stdout.write(r.text + ' ');
-  })
+  }) 
+}
 
-
-  process.exit(0);
+function outputDebug() {
+  console.log(chalk.red('Translation: ') + program.translation); 
+  console.log(chalk.red('String: ') + query);    
+  console.log(chalk.red('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));           
+  //console.log(chalk.red.bold('Returned Value: ') + JSON.stringify(result));  
 }
