@@ -22,9 +22,8 @@ if(!program.args.length) {
   program.help();
 } else {
 
-  var source = getSource(program.translation);
+  var source = require(getSource(program.translation));
   var query = buildQuery(program.args);
-
   var result = processQuery(sword(query));
 
   if (program.debug || config.dev) { outputDebug(); }
@@ -34,7 +33,7 @@ if(!program.args.length) {
 }
 
 function getSource(translation) {
-  return translation ? require('./data/'+program.translation+'.json') : require('./data/kjv.json');
+  return translation ? './data/'+program.translation+'.json' : './data/kjv.json';
 }
 
 function buildQuery(args) {
