@@ -22,7 +22,7 @@ if(!program.args.length) {
   program.help();
 } else {
 
-  var source = program.translation ? require('./data/'+program.translation+'.json') : require('./data/esv.json');
+  var source = program.translation ? require('./data/'+program.translation+'.json') : require('./data/kjv.json');
 
   var query = '';
   program.args.forEach(function(a) {
