@@ -10,7 +10,7 @@ The greatest of all motivations drove me to this package:  I wanted it myself.  
 
 Along the way I came across some interesting tools and fancied the default output up a bit.  Without any command line arguments Veritas will produce something like this:
 
-![output example](https://copy.com/IZHIxU1Cgg8IKvoq)
+![output example](https://dl.dropboxusercontent.com/u/195330/veritas_ss.jpg)
 
 It does not (currently) print any title or heading seeing as you just typed it in your command line.
 
