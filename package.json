@@ -1,6 +1,7 @@
 {
   "name": "veritas",
   "version": "0.0.2",
+  "repository": "https://github.com/gig3m/veritas",
   "description": "A simple command-line tool for outputting Bible text",
   "author": "Kyle Arrington",
   "engines": {
@@ -11,8 +12,11 @@
     "commander": "^2.3.0",
     "sword": "0.4.2",
     "lodash": "^2.4.1"
+  },  
+  "devDependencies": {
+    "tape": "2.14.0"
   },
   "bin": {
-    "veritas": "veritas.js"
+    "veritas": "bin/veritas"
   }
 }
