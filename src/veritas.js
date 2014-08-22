@@ -1,7 +1,3 @@
-#!/usr/bin/env node
-
-var program = require('commander');
-var chalk = require('chalk');
 var sword = require('sword');
 var _ = require('lodash');
 
@@ -9,44 +5,9 @@ var config = {};
 config.lang = 'en';
 config.dev = false;
 
-
-program
-  .version('0.0.1')
-  .usage('[options] <keywords>')
-  .option('-t, --translation [abbr]', 'Specify which Bible source to use')
-  .option('-m, --manuscript', 'Manuscript style output (nothing but the text)')
-  .option('-d, --debug', 'Output addition information on parsed keywords')
-  .parse(process.argv);
-
-if(!program.args.length) {
-  program.help();
-} else {
-
-  var source = require(getSource(program.translation));
-  var query = buildQuery(program.args);
-  var result = processQuery(sword(query));
-
-  if (program.debug || config.dev) { outputDebug(); }
-
-  outputResult(result);
-  process.exit(0);
-}
-
-function getSource(translation) {
-  return translation ? './data/'+program.translation+'.json' : './data/kjv.json';
-}
-
-function buildQuery(args) {
-  var query = '';
-  program.args.forEach(function(a) {
-    query = query.concat(a + ' ');
-  });
-  return query;
-}
-
-function processQuery(string) {
+module.exports = function (arr, source) {
     var result = [];
-    _(string).forEach(function(set) {
+    _(arr).forEach(function(set) {
     //shorthand for start and end
     var s = set.start;
     var e = set.end;
@@ -110,18 +71,4 @@ function processQuery(string) {
   return result;
 }
 
-function outputResult(result) {
-  //Heading needs meta data to display, Book names mostly
-  //onsole.log(chalk.bgCyan.red.bold(query));
-  _(result).forEach(function(r){
-    !program.manuscript && process.stdout.write(chalk.red('[') + chalk.yellow(r.chapter + ':' + r.verse) + chalk.red('] '));
-    process.stdout.write(r.text + ' ');
-  }) 
-}
 
-function outputDebug() {
-  console.log(chalk.red('Translation: ') + program.translation); 
-  console.log(chalk.red('String: ') + query);    
-  console.log(chalk.red('Verse(s) Interpreted: ') + JSON.stringify(sword(query)));           
-  //console.log(chalk.red.bold('Returned Value: ') + JSON.stringify(result));  
-}
