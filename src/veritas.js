@@ -5,21 +5,25 @@ var count = 0;
 
 function filterChapter(start, end, haystack) {
 	needles = [];
+	// whole chapter
 	if (!start && !end) {
 		_(haystack).forEach(function(h) {
 			needles.push(h);
-		});		
+		});
+	// beginning chapter		
 	} else if (start && !end) {
 		_(haystack).forEach(function(h) {
 			if (start <= h.verse) { needles.push(h); }
 		});
+	// ending chapter
 	} else if (!start && end) {
 		_(haystack).forEach(function(h) {
 			if (end >= h.verse) { needles.push(h); }
 		});
+	// all inclusive chapter
 	} else {
 		_(haystack).forEach(function(h) {
-			if ((start >= h.verse) && (end <= h.verse)) { needles.push(h); }
+			if ((start <= h.verse) && (end >= h.verse)) { needles.push(h); }
 		});
 	
 	}
@@ -35,53 +39,45 @@ module.exports = function (arr, source) {
 		//shorthand for start and end
 		var s = set.start;
 		var e = set.end;
+		// A range was given for this set
 		if (set.end) {
-			//A range was given for this set
-			//detect whether the range spans chapters
+			// detect whether the range spans chapters
+			// // {"start":{"book":1,"chapter":1,"verse":1},"end":{"chapter":2,"verse":1}}
 			if (_.has(set.end, 'chapter')) {
-				//The range given spans chapter boundaries
+				// The range given spans chapter boundaries
 				_.range(s.chapter, (e.chapter + 1)).forEach(function(c){
 					var haystack = _.filter(source, { 'book': s.book, 'chapter': c });
+					// reset start and end for every iteration
 					var startVerse = null;
 					var endVerse = null;
-					// on the start chapter
+					// beginning chapter so honor s.verse
 					if (c === s.chapter) {
-						startVerse = s.verse;
-						// filterChapter(s.verse, null, haystack, function(res) {
-						// 	result.concat(res);
-						// 	count+=1;
-						// });					
+						startVerse = s.verse;	
+					//end chapter so honor e.verse			
 					} else if (c === e.chapter) {
 						endVerse = e.verse;
-						// filterChapter(null, e.verse, haystack, function(res) {
-						// 	result.concat(res);
-						// 	count+=1;
-						// });
-					} else {
-						// filterChapter(null, null, haystack, function(res) {
-						// 	result.concat(res);
-						// 	count+=1;
-						// });             
 					}
 					res = filterChapter(startVerse, endVerse, haystack);
 					result = result.concat(res);
-					// console.log('result', result);
 				});
-				
+			
+			// if set set.end has a chapter, else
 			} else {
-				//The range given is inside a single chapter
-				_.range(s.verse, (e.verse + 1)).forEach(function(v){ 
-					result.push(_.find(source, { 'book': s.book, 'chapter': s.chapter, 'verse': v })); 
-				});
-				//console.log(_.range(set.start.verse, (set.end.verse + 1)));
+				// just verse range, same chapter
+				// {"start":{"book":1,"chapter":1,"verse":1},"end":{"verse":2}}
+				var haystack = _.filter(source, { 'book': s.book, 'chapter': s.chapter });
+				result = filterChapter(s.verse, e.verse, haystack);
+
 			}
+		// if set.end, else
 		} else {
-			//No range was given, single verse
+			// Can still be a range if start has no verse
+			// {start:{"book":1,"chapter":1}}
 			if (!s.verse) {
 				var haystack = _.filter(source, { 'book': s.book, 'chapter': s.chapter });
-				_(haystack).forEach(function(h) {
-					result.push(h);
-				});     
+				result = filterChapter(null, null, haystack);  
+			// Book Chapter Verse
+			// {start:{"book":1,"chapter":1,"verse":1}}   
 			} else {
 				result.push(_.find(source, s));
 			}
