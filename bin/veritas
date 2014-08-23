@@ -28,9 +28,12 @@ if(!program.args.length) {
   var query = buildQuery(program.args);
   var result = veritas(sword(query), source);
 
-  if (program.debug || config.dev) { outputDebug(); }
-
-  outputResult(result);
+  if (program.debug || config.dev) { 
+  	outputDebug(); 
+  } 
+  else { 
+  	outputResult(result); 
+  }
   process.exit(0);
 }
 
