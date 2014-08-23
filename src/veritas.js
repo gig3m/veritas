@@ -1,4 +1,3 @@
-var sword = require('sword');
 var _ = require('lodash');
 
 var config = {};
@@ -25,7 +24,7 @@ module.exports = function (arr, source) {
 							});     
 						} else {
 							_(haystack).forEach(function(h) {
-								h.verse >= s.verse && result.push(h);
+								if (h.verse >= s.verse) { result.push(h) };
 							});
 						}
 						
@@ -36,7 +35,7 @@ module.exports = function (arr, source) {
 							});     
 						} else {
 							_(haystack).forEach(function(h) {
-								h.verse <= e.verse && result.push(h);
+								if (h.verse <= e.verse) { result.push(h) };
 							});
 						}
 
@@ -51,7 +50,7 @@ module.exports = function (arr, source) {
 			} else {
 				//The range given is inside a single chapter
 				_.range(s.verse, (e.verse + 1)).forEach(function(v){ 
-					result.push(_.find(source, { 'book': s.book, 'chapter': s.chapter, 'verse': v })) 
+					result.push(_.find(source, { 'book': s.book, 'chapter': s.chapter, 'verse': v })); 
 				});
 				//console.log(_.range(set.start.verse, (set.end.verse + 1)));
 			}
@@ -69,6 +68,6 @@ module.exports = function (arr, source) {
 		}
 	});
 	return result;
-}
+};
 
 
