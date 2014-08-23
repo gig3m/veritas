@@ -12,6 +12,8 @@ var genc1 = require('./mock/gen-c1.json');
 var genc1v1c1v2 = require('./mock/gen-c1v1-c1v2.json');
 // verse range spans chapters
 var genc1v1c2v1 = require('./mock/gen-c1v1-c2v1.json');
+// range spans chapters, no verses
+var genc1c2 = require('./mock/gen-c1-c2.json');
 
 var verse = sword('Gen 1:1');
 
@@ -31,12 +33,22 @@ test('veritas returns a single chapter', function (t) {
 	t.end();
 });
 test('veritas returns a range inside a chapter', function (t) {
-	t.deepEqual(
-		veritas([{"start":{"book":1,"chapter":1,"verse":1},"end":{"verse":2}}], source), genc1v1c1v2);
+	t.deepEqual(veritas([{"start":{"book":1,"chapter":1,"verse":1},"end":{"verse":2}}], source), genc1v1c1v2);
 	t.end();
 });
-test('veritas returns a range spanning chapters', function (t) {
-	t.deepEqual(
-		veritas([{"start":{"book":1,"chapter":1,"verse":1},"end":{"chapter":2,"verse":1}}], source), genc1v1c2v1);
+test('veritas returns a range spanning chapters with verses', function (t) {
+	t.deepEqual(veritas([{"start":{"book":1,"chapter":1,"verse":1},"end":{"chapter":2,"verse":1}}], source), genc1v1c2v1);
 	t.end();
 });
+test('veritas returns a range spanning chapters with no verses', function (t) {
+	t.deepEqual(veritas([{"start":{"book":1,"chapter":1},"end":{"chapter":2}}], source), genc1c2);
+	t.end();
+});
+// test('veritas errors no book', function (t) {
+// 	t.deepEqual(veritas([{"start":{"book":1}}], source), '');
+// 	t.end();
+// });
+// test('veritas errors a single book', function (t) {
+// 	t.deepEqual(veritas([{"start":{"book":1}}], source), '');
+// 	t.end();
+// });

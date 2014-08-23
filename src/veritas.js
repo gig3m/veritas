@@ -1,11 +1,36 @@
 var _ = require('lodash');
+'use strict'
 
-var config = {};
-config.lang = 'en';
-config.dev = false;
+var count = 0;
+
+function filterChapter(start, end, haystack) {
+	needles = [];
+	if (!start && !end) {
+		_(haystack).forEach(function(h) {
+			needles.push(h);
+		});		
+	} else if (start && !end) {
+		_(haystack).forEach(function(h) {
+			if (start <= h.verse) { needles.push(h); }
+		});
+	} else if (!start && end) {
+		_(haystack).forEach(function(h) {
+			if (end >= h.verse) { needles.push(h); }
+		});
+	} else {
+		_(haystack).forEach(function(h) {
+			if ((start >= h.verse) && (end <= h.verse)) { needles.push(h); }
+		});
+	
+	}
+
+	return needles;
+
+}
 
 module.exports = function (arr, source) {
 		var result = [];
+
 		_(arr).forEach(function(set) {
 		//shorthand for start and end
 		var s = set.start;
@@ -17,34 +42,30 @@ module.exports = function (arr, source) {
 				//The range given spans chapter boundaries
 				_.range(s.chapter, (e.chapter + 1)).forEach(function(c){
 					var haystack = _.filter(source, { 'book': s.book, 'chapter': c });
+					var startVerse = null;
+					var endVerse = null;
+					// on the start chapter
 					if (c === s.chapter) {
-						if (!s.verse) {
-							_(haystack).forEach(function(h) {
-								result.push(h);
-							});     
-						} else {
-							_(haystack).forEach(function(h) {
-								if (h.verse >= s.verse) { result.push(h); }
-							});
-						}
-						
+						startVerse = s.verse;
+						// filterChapter(s.verse, null, haystack, function(res) {
+						// 	result.concat(res);
+						// 	count+=1;
+						// });					
 					} else if (c === e.chapter) {
-						if (!e.verse) {
-							_(haystack).forEach(function(h) {
-								result.push(h);
-							});     
-						} else {
-							_(haystack).forEach(function(h) {
-								if (h.verse <= e.verse) { result.push(h); }
-							});
-						}
-
+						endVerse = e.verse;
+						// filterChapter(null, e.verse, haystack, function(res) {
+						// 	result.concat(res);
+						// 	count+=1;
+						// });
 					} else {
-						_(haystack).forEach(function(h) {
-							result.push(h);
-						});                 
-
+						// filterChapter(null, null, haystack, function(res) {
+						// 	result.concat(res);
+						// 	count+=1;
+						// });             
 					}
+					res = filterChapter(startVerse, endVerse, haystack);
+					result = result.concat(res);
+					// console.log('result', result);
 				});
 				
 			} else {
@@ -66,6 +87,7 @@ module.exports = function (arr, source) {
 			}
 
 		}
+
 	});
 	return result;
 };
