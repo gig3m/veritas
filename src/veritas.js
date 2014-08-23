@@ -24,7 +24,7 @@ module.exports = function (arr, source) {
 							});     
 						} else {
 							_(haystack).forEach(function(h) {
-								if (h.verse >= s.verse) { result.push(h) };
+								if (h.verse >= s.verse) { result.push(h); }
 							});
 						}
 						
@@ -35,7 +35,7 @@ module.exports = function (arr, source) {
 							});     
 						} else {
 							_(haystack).forEach(function(h) {
-								if (h.verse <= e.verse) { result.push(h) };
+								if (h.verse <= e.verse) { result.push(h); }
 							});
 						}
 
